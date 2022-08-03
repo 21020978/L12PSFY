@@ -1,5 +1,4 @@
 package sg.edu.sg.c346.id21034014.l11ps;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -41,7 +40,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("ALTER TABLE " + TABLE_MOVIES + " ADD COLUMN  module_name TEXT ");
     }
 
-    public long insertMovie(String title, String genre, int year,String rating) {
+    public long insertMovie(String title, String genre, int year, String rating) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_TITLE, title);
@@ -58,7 +57,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String[] columns= {COLUMN_ID, COLUMN_TITLE, COLUMN_GENRE, COLUMN_YEAR, COLUMN_RATING };
+        String[] columns = {COLUMN_ID, COLUMN_TITLE, COLUMN_GENRE, COLUMN_YEAR, COLUMN_RATING};
         Cursor cursor = db.query(TABLE_MOVIES, columns, null, null,
                 null, null, null, null);
 
@@ -69,7 +68,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 String genre = cursor.getString(2);
                 int year = cursor.getInt(3);
                 String rating = cursor.getString(4);
-                Movies movie = new Movies(id,title,genre,year,rating);
+                Movies movie = new Movies(id, title, genre, year, rating);
                 movies.add(movie);
             } while (cursor.moveToNext());
         }
@@ -82,9 +81,9 @@ public class DBHelper extends SQLiteOpenHelper {
         ArrayList<Movies> movies = new ArrayList<Movies>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns= {COLUMN_ID, COLUMN_TITLE, COLUMN_GENRE, COLUMN_YEAR, COLUMN_RATING };
+        String[] columns = {COLUMN_ID, COLUMN_TITLE, COLUMN_GENRE, COLUMN_YEAR, COLUMN_RATING};
         String condition = COLUMN_RATING + " Like ?";
-        String[] args = { "%" +  "PG13" + "%"};
+        String[] args = {"%" + "PG13" + "%"};
         Cursor cursor = db.query(TABLE_MOVIES, columns, condition, args,
                 null, null, null, null);
 
@@ -95,7 +94,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 String genre = cursor.getString(2);
                 int year = cursor.getInt(3);
                 String rating = cursor.getString(4);
-                Movies movie = new Movies(id,title,genre,year,rating);
+                Movies movie = new Movies(id, title, genre, year, rating);
                 movies.add(movie);
             } while (cursor.moveToNext());
         }
@@ -105,7 +104,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public int updateNote(Movies data){
+    public int updateNote(Movies data) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_TITLE, data.getMovieTitle());
@@ -120,8 +119,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return result;
     }
+
     //
-    public int deleteNote(int id){
+    public int deleteNote(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         String condition = COLUMN_ID + "= ?";
         String[] args = {String.valueOf(id)};
@@ -129,5 +129,4 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return result;
     }
-
 }

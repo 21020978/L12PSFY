@@ -1,7 +1,6 @@
 package sg.edu.sg.c346.id21034014.l11ps;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
@@ -32,7 +34,7 @@ public class Modify extends AppCompatActivity {
 
         etMovieID = findViewById(R.id.etID);
         etMovieTitle = findViewById(R.id.etTitle);
-        etMovieGenre = findViewById(R.id.etgenre);
+        etMovieGenre = findViewById(R.id.etGenre);
         etMovieYear = findViewById(R.id.etYear);
         spn = findViewById(R.id.spnRating);
         btnCancel = findViewById(R.id.btnCancel);
@@ -72,7 +74,28 @@ public class Modify extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                AlertDialog.Builder myBuilder = new AlertDialog.Builder(Modify.this);
+                myBuilder.setTitle("Danger");
+                myBuilder.setMessage("Are you sure you want to discard the changes");
+                myBuilder.setCancelable(false);
+
+                myBuilder.setNegativeButton("DO NOT DISCARD", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+
+                    }
+                });
+
+                myBuilder.setPositiveButton("DISCARD", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        finish();
+                    }
+                });
+                AlertDialog myDialog = myBuilder.create();
+                myDialog.show();
+
+
             }
         });
 
@@ -86,11 +109,19 @@ public class Modify extends AppCompatActivity {
                 int year = Integer.parseInt(yearString);
                 data.setMovieyear(year);
                 data.setMovierating(movieRating);
+                if(data.getMovieyear() >= 1877){
                 dbh.updateNote(data);
                 dbh.close();
+                finish();}
+                else{
+                    Toast.makeText(Modify.this, "Invalid Movie Date",
+                            Toast.LENGTH_SHORT).show();
 
-                finish();
-//                Toast.makeText(ModifyPage.this, "hi", Toast.LENGTH_SHORT).show();
+                }
+
+
+
+
             }
         });
 
@@ -99,12 +130,39 @@ public class Modify extends AppCompatActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DBHelper dbh = new DBHelper(Modify.this);
-                int result = dbh.deleteNote(data.getMovieid());
-                Log.d("Result", result + "");
-                finish();
+                AlertDialog.Builder myBuilder = new AlertDialog.Builder(Modify.this);
+                myBuilder.setTitle("Danger");
+                myBuilder.setMessage("Are you sure you want to delete the movie " + data.getMovieTitle());
+                myBuilder.setCancelable(false);
+
+                myBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                    }
+                });
+
+                myBuilder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        DBHelper dbh = new DBHelper(Modify.this);
+                        int result = dbh.deleteNote(data.getMovieid());
+                        Log.d("Result", result + "");
+                        finish();
+                    }
+                });
+
+
+
+                AlertDialog myDialog = myBuilder.create();
+                myDialog.show();
+
+
+
+
             }
+
         });
+
 
         spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
